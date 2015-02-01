@@ -313,12 +313,12 @@ echo "Creating Makefile"
 echo
 # Prepare Makefile using maker
 sleep 2
-./maker executables.lemon Makefile_prelude
+./maker executables.test Makefile_prelude
 
 if [ $? -ne 0 ]; then
     # Sometimes the maker fails the first time. Run it again
     # if that is the case
-    ./maker executables.lemon Makefile_prelude
+    ./maker executables.test Makefile_prelude
 fi
 
 # Compile DataPath using Makefile
