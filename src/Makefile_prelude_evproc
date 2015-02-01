@@ -1,0 +1,78 @@
+# This make variable needs to be set to /bin/bash otherwise dash takes over
+# and -e is not correctly interpreted
+SHELL:=/bin/bash
+
+# The makefile that is generated will support a "make clean" that kills all of the .o files,
+# all of the executables, and all of the .cc and .h files that were generated using m4.
+# If there are any other files that you want the Makefile to remove under the "make clean"
+# command, put them here
+REMOVES = Planner/source/y.tab.c Planner/source/y.tab.h Planner/source/lex.yy.c LemonTranslator/parser/DataPathLexer.c LemonTranslator/parser/DataPathParser.c LemonTranslator/parser/DPtree.c
+
+ifndef PREFIX
+	PREFIX := /usr/local
+endif
+
+# this is the compiler to use for C++ files
+#CC := g++
+CC := clang++
+
+# Choose the standard library used by clang. Only works with clang
+ifeq ($(CC), clang++)
+CC_STDLIB := -stdlib=libstdc++
+#CC_STDLIB := -stdlib=libc++
+else
+CC_STDLIB :=
+endif
+
+# this is the compiler to use for .m4 files
+M4 = m4
+
+# This is the interpreter used for .php files
+PHP := php
+
+# Set up flags used for PHP interpreter
+
+# Set up the include directories for PHP by appending PHP/php to the current
+# include path
+PHP_INC_DIR := $(shell php -r 'echo get_include_path();')
+PHP_INC_DIR := ${PHP_INC_DIR}:PHP/php
+
+PHPFLAGS := -d "include_path=${PHP_INC_DIR}"
+
+# these are the compiler flags that are used when the final linking is done
+LINKFLAGS := -ljsoncpp
+
+# If we are using libc++ and libc++ was compiled using libc++abi, we need to do
+# some special linking
+ifeq ($(CC_STDLIB), -stdlib=libc++)
+LINKFLAGS += -nodefaultlibs -lc++ -lc++abi -lm -lc -lgcc_s
+endif
+
+# Use Google's thread-cached malloc
+#LINKFLAGS += -ltcmalloc
+
+# Link with gperftools CPU profile
+#LINKFLAGS += -lprofiler
+
+# these are the compiler flags that are used when object files are created
+CCFLAGS := -c -w -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE
+
+# Choose which C++ standard to use
+CCSTANDARD := -std=c++11
+#CCSTANDARD := -std=c++1y
+
+CCFLAGS += ${CCSTANDARD}
+CCFLAGS += ${CC_STDLIB}
+
+
+# use linux performance counters
+CCFLAGS += -DUSE_PERF_LINUX
+
+# compiler code optimization
+CCFLAGS += -O3 -march=native
+#CCFLAGS += -O0
+
+
+# Special rule to make sure changes to grokit_config.php get propagated during make
+Global/php/Constants.h.php: PHP/php/grokit_config.php
+
