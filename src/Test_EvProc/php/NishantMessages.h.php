@@ -12,7 +12,9 @@ require_once('MessagesFunctions.php');
 <?php
 grokit\create_message_type( 'ResultMessage', [ 'id' => 'int' ], [ 'msg' => 'Json::Value' ], true );
 ?>
-
+<?php
+grokit\create_message_type( 'CreateSubTree', [ 'id' => 'int' ], [ 'msg' => 'Json::Value' ], true );
+?>
 <?
 grokit\create_message_type(
     'SendWorkMsg',
@@ -28,5 +30,6 @@ grokit\create_message_type(
     [ 'worker' => 'EventProcessor' ]
 );
 ?>
+
 
 #endif // _NISHANT_MESSAGES_H_

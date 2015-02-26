@@ -104,7 +104,7 @@ void EventProcessorImp::Spin() {
     pthread_setcancelstate(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
 
     PreStart();
-
+    
     // repeat forever
     while (spin_flag.test_and_set(std::memory_order_relaxed)) {
         // get new message from the queue (blocks until a message is available)
@@ -136,6 +136,8 @@ void EventProcessorImp::StopSpinning(void) {
 void EventProcessorImp::ProcessMessage(Message& msg) {
     if (!dead)
         msgQueue.InsertMessage(msg);
+    else 
+        cout<<"Sending messages to a dead actor, too late :-("<<endl;
 }
 
 void EventProcessorImp::WaitForProcessorDeath(void) {
@@ -157,6 +159,7 @@ void EventProcessorImp::Seppuku() {
         pthread_cancel(*vThreads[i]);
     }
 
+    //should we shift this in the begining of the function so that new msg will not be processed
     //set the dead variable to signal we are dead
     dead = true;
 
