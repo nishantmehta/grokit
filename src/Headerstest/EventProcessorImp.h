@@ -27,7 +27,6 @@
 #include "EventProcessor.h"
 #include "MultiMessageQueue.h"
 #include "MessageMacros.h"
-#include "Message.h"
 
 
 // forward definition of all messages
@@ -121,8 +120,6 @@ class EventProcessorImp {
         // everybody should use ForkAndSpin instead of Spin to start a thread running the Spin()
         virtual void Spin(void);
 
-
-
         // Makes the event processor stop spinning after the current message.
         void StopSpinning(void);
 
@@ -157,8 +154,6 @@ class EventProcessorImp {
         // method to commit suicide. This should be called if the event processor wants to kill itself
         void Seppuku();
 
-        //virtual void _dispatch(Message& msg);
-        virtual void _dispatch(Message &__msg);
         // destructor
         virtual ~EventProcessorImp();
 

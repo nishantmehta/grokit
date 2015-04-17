@@ -74,7 +74,6 @@ class MultiMessageQueue {
         MultiMessageQueue(bool _debug = false, const char *_dbgMsg = NULL);
         virtual ~MultiMessageQueue();
 
-
         // if the type is already in, the priority is changed
         // the priority of the type is used to compute the priority of a message
         void AddMessageType(off_t Type, int Priority);

@@ -57,25 +57,4 @@ void ClassName::MessageHandler(EventProcessorImp &_obj, Message &_msg){\
 }
 
 
-#define BEGIN_MESSAGE_DEFINITION                        \
-void _dispatch(Message &__msg) {                        \
-    switch (__msg.Type()) {
-
-
-
-#define HANDLER(MESSAGE_TYPE,MESSAGE_HANDLER)           \
-    case MESSAGE_TYPE::type:  {                         \
-        MESSAGE_CONVERT(__msg, temp, MESSAGE_TYPE)      \
-        MESSAGE_HANDLER(temp);                          \
-        break;}
-
-
-#define  END_MESSSAGE_DEFINITION                        \
-    default:                                            \
-        FATAL("Message type not supported!");           \
-    }                                                   \
-}                                       
-
-
-
 #endif
