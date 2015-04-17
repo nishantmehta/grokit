@@ -50,8 +50,11 @@
 
             virtual ~ActorImpl() { }
 
+
             MESSAGE_HANDLER_DECLARATION(ProcessTestMessage);
             MESSAGE_HANDLER_DECLARATION(ProcessTestMessage1);
+
+
     };
     class TreeActor : public EventProcessor{
         public: 
@@ -59,6 +62,8 @@
             void killChildren();
             void SendMessages();
             void MakeSubTree(int level, int numberOfChildren);
+            
+
     };
     class Actor : public EventProcessor {
         public:
@@ -75,6 +80,7 @@
             TreeActorImpl(int i) {
                 RegisterMessageProcessor(CreateSubTree:: type, &PS3);
             }
+
 
             void killChildren() {
                 TreeActor temp(1);
@@ -114,7 +120,19 @@
 
             virtual ~TreeActorImpl() { }
             MESSAGE_HANDLER_DECLARATION(PS3);
+
+            void processMessageNishant(CreateSubTree &msg){
+                cout<<"improcessing"<<endl;
+            }
+
+            BEGIN_MESSAGE_DEFINITION
+                HANDLER(CreateSubTree, processMessageNishant)
+            END_MESSSAGE_DEFINITION
+
+
     };
+
+
 
     TreeActor::TreeActor(int i) {
         evProc = new TreeActorImpl(1);

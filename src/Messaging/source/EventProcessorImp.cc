@@ -109,7 +109,7 @@ void EventProcessorImp::Spin() {
     while (spin_flag.test_and_set(std::memory_order_relaxed)) {
         // get new message from the queue (blocks until a message is available)
         Message& cMessage = msgQueue.RemoveMessage();
-
+        /*
         ProcessorMap::iterator cur = processorsMap.find(cMessage.Type());
         // we cannot possibly get a message that we do not suppoprt
 
@@ -117,20 +117,25 @@ void EventProcessorImp::Spin() {
             // get the correct processor
             msgProcessor proc = cur->second;
             // call the processor
-            (proc)(*this, cMessage);
+            /(proc)(*this, cMessage);
         }
         else {
             // Don't have a processor registered for this message type, use the
             // default handler.
-            (defaultProcessor)(*this, cMessage);
+            (defaultProcessor)(*this, cMessage);    
         }
-
+        */
+        this->_dispatch(cMessage);
         delete (&cMessage);
     }
+    cout<<"-------->>>>>>>>>>>>>>>>>>>>>>>>"<<endl;
 }
 
 void EventProcessorImp::StopSpinning(void) {
+    cout<<"got a kill command"<<endl;
     spin_flag.clear(std::memory_order_relaxed);
+
+    dead = true;
 }
 
 void EventProcessorImp::ProcessMessage(Message& msg) {
@@ -147,16 +152,18 @@ void EventProcessorImp::WaitForProcessorDeath(void) {
     }
     pthread_mutex_unlock(&mutex);
 }
+void EventProcessorImp::_dispatch(Message &msg) {}
 
 void EventProcessorImp::Seppuku() {
     if (debug) {
         cout << "EventProcessor " << dbgMsg << " is SEPPUKU." << endl;
     }
-
+    
+    
     pthread_mutex_lock(&mutex);
     for(unsigned int i = 0; i < vThreads.size(); i++) {
         //kill the threads
-        pthread_cancel(*vThreads[i]);
+       pthread_cancel(*vThreads[i]);
     }
 
     //should we shift this in the begining of the function so that new msg will not be processed
@@ -180,6 +187,8 @@ void* EventProcessorImp::ForkAndSpinThread(void* aux) {
     //pthread_exit(NULL);
     return NULL;
 }
+
+
 
 bool EventProcessorImp::ForkAndSpin(int node) {
     //are we dead? can we even start a thread?
