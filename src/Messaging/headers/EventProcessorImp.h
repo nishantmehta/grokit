@@ -157,8 +157,9 @@ class EventProcessorImp {
         // method to commit suicide. This should be called if the event processor wants to kill itself
         void Seppuku();
 
-        //virtual void _dispatch(Message& msg);
+        //dispatch method to route message to handler functions
         virtual void _dispatch(Message &__msg);
+
         // destructor
         virtual ~EventProcessorImp();
 
