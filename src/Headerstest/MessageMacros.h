@@ -56,5 +56,38 @@ void ClassName::MessageHandler(EventProcessorImp &_obj, Message &_msg){\
     MESSAGE_CLEANUP; \
 }
 
+#define ACTOR_HANDLE			                        											\
+void _dispatch(Message &__msg) {                        											\
+    switch (__msg.Type()) {
+
+
+
+#define HANDLER(MESSAGE_TYPE,MESSAGE_HANDLER)           											\
+    case MESSAGE_TYPE::type:  {                         											\
+        MESSAGE_CONVERT(__msg, temp, MESSAGE_TYPE)      											\
+        MESSAGE_HANDLER(temp);                          											\
+        break;}
+
+
+#define  END_HANDLE						     											            \
+    case DieMessage::type: {																		\
+    	StopSpinning();																				\
+    	break;																						\
+    }																								\
+    default:                                            											\
+        DefaultMessageHandler(*this, __msg);					                                    \
+    }                                                   											\
+}
+
+#define  END_HANDLE_WITH_DEFAULT_HANDLER(DEFAULT_HANDLER)						     				\							            \
+    case DieMessage::type: {																		\
+    	StopSpinning();																				\
+    	break;																						\
+    }																								\
+    default:                                            											\
+        DEFAULT_HANDLER(__msg);																		\
+    }                                                   											\
+}      
+
 
 #endif
