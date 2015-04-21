@@ -24,18 +24,23 @@
         		cout<<"foo executed"<<endl;
         	}
 
+            void deff(Message& msg) {
+                cout<<"expected this"<<endl;
+            }
+
         	void bar(CreateSubTree &msg) {
         		cout<<"bar executed"<<endl;
         	}
 
             ACTOR_HANDLE
-                HANDLER(ResultMessage, foo)
-                HANDLER(CreateSubTree, bar)
-            END_HANDLE
+                HANDLER(CreateSubTree, bar, 2)
+            END_HANDLE_WITH_DEFAULT_HANDLER(deff)
 
 
     };
+
     Actor::Actor() {
         evProc = new ActorImpl();
     }
+
 	#endif // _TEST_ACTOR_H_

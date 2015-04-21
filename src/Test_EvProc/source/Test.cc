@@ -24,10 +24,15 @@ void NewMessagingSysTest() {
 	Actor *root = new Actor();
     Json::Value msg = "work string";
     root->ForkAndSpin();
+    
+    CreateSubTree_Factory(*root, 1, msg);
+    ResultMessage_Factory(*root, 1, msg);
 
     CreateSubTree_Factory(*root, 1, msg);
     ResultMessage_Factory(*root, 1, msg);
 
+    CreateSubTree_Factory(*root, 1, msg);
+    ResultMessage_Factory(*root, 1, msg);
     KillEvProc(*root);
 
     root->WaitForProcessorDeath();
@@ -47,7 +52,7 @@ void NewMessagingSysTest2() {
 int main(void){
 	
 	NewMessagingSysTest();
-    NewMessagingSysTest2();
+    //NewMessagingSysTest2();
     addWait(1);
 	return 0;
 }

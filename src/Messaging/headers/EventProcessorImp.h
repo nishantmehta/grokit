@@ -75,7 +75,7 @@ class EventProcessorImp {
         // data for debuging purposes
         bool debug;
         const char *dbgMsg;
-
+        bool registerMsg = true;
         // Flag to check while spinning
         std::atomic_flag spin_flag;
 
@@ -104,6 +104,8 @@ class EventProcessorImp {
         // If not overridden, the default message handler will simply fail.
         void RegisterDefaultMessageProcessor( msgProcessor Proc );
 
+		void RegisterMessagePriority(off_t Type, int Priority=1);
+
         // set the maximum number of threads that an EventProessor supports
         // this does not start that many threads, it just sets the limit
         void SetMaxThreads(int max) {
@@ -128,6 +130,8 @@ class EventProcessorImp {
 
         // Method for an event processor to get an interface object for itself.
         EventProcessor Self(void);
+
+        void RegisterMessagesNishant();
 
     public:
         // constructor

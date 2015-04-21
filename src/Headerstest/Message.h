@@ -142,10 +142,11 @@ public:
 */
 class DieMessage : public Message {
 private:
-	//constructor
-	DieMessage(void) {}
+
 
 public:
+	//constructor
+	DieMessage(void) {}
 	virtual ~DieMessage() {}
 
 	// type
@@ -166,5 +167,24 @@ inline void DieMessage_Factory(EventProcessor& dest) {
 	Message* msg = new DieMessage();
 	dest.ProcessMessage(*msg);
 }
+
+class RegisterMessage : public Message {
+private:
+	
+public:
+	//constructor
+	RegisterMessage() {}
+	virtual ~RegisterMessage() {}
+
+	// type
+	static const off_t type=0xdef323b5a9bda8b6ULL;
+	virtual off_t Type(void) const OVERRIDE_SPEC { return 0xdef323b5a9bda8b6ULL; }
+	virtual const char* TypeName(void) const OVERRIDE_SPEC { return "RegisterMessage"; }
+
+    RegisterMessage( Json::Value & val, void * dummy1, void * dummy2, void * dummy3 ) {
+        FromJson(val);
+    }
+};
+
 
 #endif //  _MESSAGE_H_

@@ -95,7 +95,7 @@ MultiMessageQueue::~MultiMessageQueue() {
 
 void MultiMessageQueue::AddMessageType(off_t _Type, int Priority) {
 	pthread_mutex_lock(&mutex);
-
+	cout<<"im late"<<endl;
 	map<off_t,TypeBookkeeping>::iterator itr = typeMap.find(_Type);
 	if (itr!=typeMap.end()){
 		if (_Type!=DieMessage::type) {
@@ -121,11 +121,13 @@ void MultiMessageQueue::InsertMessage(Message& _Payload) {
         TypeBookkeeping& bk = (*itr).second;
         InternalMessage msg(Payload, timestamp);
         bk.InsertMessage(msg);
+        cout<<"correct"<<endl;
 
     } else {
         // Message isn't registered, add it to unregistered list.
         InternalMessage msg(Payload, timestamp);
         unregisteredMessages.push_back(msg);
+        cout<<"correct~"<<endl;
     }
 
     // increment timestamp to advance time
@@ -152,7 +154,7 @@ Message& MultiMessageQueue::RemoveMessage() {
 
 	// now we know something is inside
 	assert(numMessages!=0);
-
+	cout<<"number of msg "<<numMessages<<endl; 
 	// form the information for the decision function
 	TypeInfo types[MAX_NUM_TYPES];
 	int num = 0;

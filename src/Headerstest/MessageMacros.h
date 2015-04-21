@@ -56,38 +56,81 @@ void ClassName::MessageHandler(EventProcessorImp &_obj, Message &_msg){\
     MESSAGE_CLEANUP; \
 }
 
-#define ACTOR_HANDLE			                        											\
-void _dispatch(Message &__msg) {                        											\
+#define ACTOR_HANDLE                                                        \
+virtual void _dispatch(Message &__msg) {
+
+#define HANDLER(MESSAGE_TYPE,MESSAGE_HANDLER, PRIORITY)                     \
+    if( registerMsg) {                                                      \
+        RegisterMessagePriority(MESSAGE_TYPE::type, PRIORITY);              \
+    }                                                                       \
+    if( MESSAGE_TYPE::type == __msg.Type()) {                               \
+        MESSAGE_CONVERT(__msg, temp, MESSAGE_TYPE)                          \
+        MESSAGE_HANDLER(temp);                                              \
+        return;}                                                            
+                                                           
+
+
+
+#define  END_HANDLE_WITH_DEFAULT_HANDLER(DEFAULT_HANDLER)                   \
+    if(registerMsg) {                                                       \
+        RegisterMessagePriority(DieMessage::type, 0);                       \
+    }                                                                       \
+    if( DieMessage::type == __msg.Type() && !registerMsg) {                 \
+        StopSpinning();                                                     \
+        return;                                                             \
+    } else {registerMsg = false;}                                           \
+    DEFAULT_HANDLER(__msg);                                                 \
+}
+
+#define  END_HANDLE                                                         \
+    if(registerMsg) {                                                       \
+        RegisterMessagePriority(DieMessage::type, 0);                       \
+    }                                                                       \
+    if( DieMessage::type == __msg.Type() && !registerMsg) {                 \
+        StopSpinning();                                                     \
+        return;                                                             \
+    } else {registerMsg = false;}                                           \
+    DefaultMessageHandler(*this, __msg);                                    \
+}
+
+#endif
+/*
+#define ACTOR_HANDLE                                                        \
+void _dispatch(Message &__msg) {                                            \
     switch (__msg.Type()) {
 
 
 
-#define HANDLER(MESSAGE_TYPE,MESSAGE_HANDLER)           											\
-    case MESSAGE_TYPE::type:  {                         											\
-        MESSAGE_CONVERT(__msg, temp, MESSAGE_TYPE)      											\
-        MESSAGE_HANDLER(temp);                          											\
-        break;}
+#define HANDLER(MESSAGE_TYPE,MESSAGE_HANDLER, PRIORITY)                     \
+    case MESSAGE_TYPE::type:  {                                             \
+        MESSAGE_CONVERT(__msg, temp, MESSAGE_TYPE)                          \
+        MESSAGE_HANDLER(temp);                                              \
+        break;}                                                             \
+    case RegisterMessage::type: {                                           \
+        RegisterMessagePriority(MESSAGE_TYPE::type, PRIORITY);              \
+        cout<<"registered msg"<<endl;                                       \
+    }
 
 
-#define  END_HANDLE						     											            \
-    case DieMessage::type: {																		\
-    	StopSpinning();																				\
-    	break;																						\
-    }																								\
-    default:                                            											\
-        DefaultMessageHandler(*this, __msg);					                                    \
-    }                                                   											\
+#define  END_HANDLE                                                         \
+    case DieMessage::type: {                                                \
+        StopSpinning();                                                     \
+        break;                                                              \
+    }                                                                       \
+    default:                                                                \
+        DefaultMessageHandler(*this, __msg);                                \
+    }                                                                       \
 }
 
-#define  END_HANDLE_WITH_DEFAULT_HANDLER(DEFAULT_HANDLER)						     				\							            \
-    case DieMessage::type: {																		\
-    	StopSpinning();																				\
-    	break;																						\
-    }																								\
-    default:                                            											\
-        DEFAULT_HANDLER(__msg);																		\
-    }                                                   											\
+#define  END_HANDLE_WITH_DEFAULT_HANDLER(DEFAULT_HANDLER)                   \
+    case DieMessage::type: {                                                \
+        StopSpinning();                                                     \
+        break;                                                              \
+    }                                                                       \
+    default:                                                                \
+        DEFAULT_HANDLER(__msg);                                             \
+    }                                                                       \
 }      
 
-
-#endif
+//              \
+*/

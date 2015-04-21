@@ -47,9 +47,11 @@ EventProcessorImp::EventProcessorImp(bool _debug, const char *_dbgMsg) :
     };
 
     RegisterMessageProcessor( DieMessage::type, dieProc, 0 );
-    */  
+    */
+    //RegisterMessagesNishant();  
     // set the spin_flag
     spin_flag.test_and_set(std::memory_order_relaxed);
+
 }
 
 EventProcessorImp::~EventProcessorImp() {
@@ -86,6 +88,10 @@ EventProcessorImp::~EventProcessorImp() {
     }
 }
 
+void EventProcessorImp::RegisterMessagesNishant(){
+    Message* msg = new RegisterMessage();
+    this->_dispatch(*msg);
+}
 void EventProcessorImp::RegisterMessageProcessor(off_t Type, msgProcessor Proc, int Priority) {
     // put the method in
     processorsMap[Type] = Proc;
@@ -99,8 +105,15 @@ void EventProcessorImp::RegisterDefaultMessageProcessor( msgProcessor Proc ) {
 void EventProcessorImp::PreStart(void) {
     // Do nothing
 }
+
+void EventProcessorImp::RegisterMessagePriority(off_t Type, int Priority) {
+    
+    msgQueue.AddMessageType(Type, Priority);
+}
+
 void EventProcessorImp::_dispatch(Message &msg) {
-    // Do nothing   
+    // Do nothing
+    cout<<"super"<<endl;
 }
 
 void EventProcessorImp::Spin() {
@@ -241,6 +254,10 @@ bool EventProcessorImp::ForkAndSpin(int node) {
         pthread_setaffinity_np(threadPtr, MAX_CPU_SETS, cpus);
     }
 #endif // USE_NUMA
+        if(registerMsg) {
+           RegisterMessagesNishant();
+           
+        }
 
     return true;
 }

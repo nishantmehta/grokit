@@ -1,5 +1,6 @@
 Test_EvProc/executable/test:
     -lpthread
+    -rdynamic
     -lrt
     Test_EvProc
     DataStructures
