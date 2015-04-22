@@ -28,11 +28,11 @@ void NewMessagingSysTest() {
     CreateSubTree_Factory(*root, 1, msg);
     ResultMessage_Factory(*root, 1, msg);
 
-    CreateSubTree_Factory(*root, 1, msg);
-    ResultMessage_Factory(*root, 1, msg);
+//    CreateSubTree_Factory(*root, 1, msg);
+//    ResultMessage_Factory(*root, 1, msg);
 
-    CreateSubTree_Factory(*root, 1, msg);
-    ResultMessage_Factory(*root, 1, msg);
+//    CreateSubTree_Factory(*root, 1, msg);
+//    ResultMessage_Factory(*root, 1, msg);
     KillEvProc(*root);
 
     root->WaitForProcessorDeath();

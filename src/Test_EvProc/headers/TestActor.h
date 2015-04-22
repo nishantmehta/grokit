@@ -33,7 +33,7 @@
         	}
 
             ACTOR_HANDLE
-                HANDLER(ResultMessage, bar, 1)
+                HANDLER(ResultMessage, foo, 1)
                 HANDLER(CreateSubTree, bar, 2)
             END_HANDLE
 
