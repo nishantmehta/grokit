@@ -86,7 +86,7 @@ virtual void _dispatch(Message &__msg) {
     if( DieMessage::type == __msg.Type() && !registerMsg) {                 \
         StopSpinning();                                                     \
         return;                                                             \
-    } else {registerMsg = false;}                                           \
+    } else {registerMsg = false; return;}                                    \
     DefaultMessageHandler(*this, __msg);                                    \
 }
 

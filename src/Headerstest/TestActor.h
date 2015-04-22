@@ -33,8 +33,9 @@
         	}
 
             ACTOR_HANDLE
+                HANDLER(ResultMessage, foo, 1)
                 HANDLER(CreateSubTree, bar, 2)
-            END_HANDLE_WITH_DEFAULT_HANDLER(deff)
+            END_HANDLE
 
 
     };
